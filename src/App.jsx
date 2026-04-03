@@ -11,12 +11,46 @@ function App() {
   const [pdbData, setPdbData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [viewerMode, setViewerMode] = useState('spectrum')
+
+  const handleComplexSelect = async (complex) => {
+    setLoading(true)
+    setError(null)
+    setPdbData(null)
+    setProteinData(null)
+    setViewerMode('chain')
+
+    try {
+      const res = await fetch(`https://files.rcsb.org/download/${complex.pdbId}.pdb`)
+      if (!res.ok) throw new Error(`Failed to fetch PDB complex ${complex.pdbId} from RCSB`)
+      const pdb = await res.text()
+      setPdbData(pdb)
+      setProteinData({
+        name: complex.name,
+        gene: '—',
+        organism: '—',
+        accession: complex.pdbId,
+        confidence: null,
+        plddt: null,
+        sequence: '—',
+        length: 'Multi-chain',
+        paeImageUrl: null,
+        entryId: complex.pdbId,
+        source: 'RCSB PDB',
+      })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleProteinSelect = async (protein) => {
     setLoading(true)
     setError(null)
     setPdbData(null)
     setProteinData(null)
+    setViewerMode('spectrum')
 
     try {
       // Fetch the AlphaFold prediction metadata
@@ -61,6 +95,7 @@ function App() {
     setError(null)
     setPdbData(null)
     setProteinData(null)
+    setViewerMode('spectrum')
 
     try {
       const res = await fetch('https://api.esmatlas.com/foldSequence/v1/pdb/', {
@@ -111,18 +146,26 @@ function App() {
               <span className="tab-icon">🧬</span>
               ESMFold
             </button>
+            <button
+              className={`tab-btn ${activeTab === 'complexes' ? 'active' : ''}`}
+              onClick={() => setActiveTab('complexes')}
+            >
+              <span className="tab-icon">🧩</span>
+              Complexes
+            </button>
           </div>
           <SearchPanel
             activeTab={activeTab}
             onProteinSelect={handleProteinSelect}
             onESMFold={handleESMFold}
+            onComplexSelect={handleComplexSelect}
             loading={loading}
           />
           {error && <div className="error-banner">{error}</div>}
           {proteinData && <ProteinInfo data={proteinData} />}
         </aside>
         <section className="viewer-area">
-          <ProteinViewer pdbData={pdbData} loading={loading} />
+          <ProteinViewer pdbData={pdbData} loading={loading} viewerMode={viewerMode} />
         </section>
       </main>
     </div>

@@ -1,9 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './ProteinViewer.css'
 
-function ProteinViewer({ pdbData, loading }) {
+function ProteinViewer({ pdbData, loading, viewerMode = 'spectrum' }) {
   const viewerRef = useRef(null)
   const viewerInstance = useRef(null)
+  const [representation, setRepresentation] = useState('cartoon')
+  const [isExploded, setIsExploded] = useState(false)
 
   useEffect(() => {
     if (!viewerRef.current || !window.$3Dmol) return
@@ -19,11 +21,74 @@ function ProteinViewer({ pdbData, loading }) {
 
     if (pdbData) {
       viewer.addModel(pdbData, 'pdb')
-      viewer.setStyle({}, { cartoon: { color: 'spectrum' } })
+      
+      if (isExploded) {
+        const m = viewer.getModel()
+        const atoms = m.selectedAtoms({})
+        
+        let globalCM = { x: 0, y: 0, z: 0 }
+        let numAtoms = 0
+        const chainCM = {}
+        const chainCount = {}
+
+        for (let i = 0; i < atoms.length; i++) {
+          const a = atoms[i]
+          globalCM.x += a.x; globalCM.y += a.y; globalCM.z += a.z;
+          numAtoms++;
+
+          if (!chainCM[a.chain]) {
+            chainCM[a.chain] = { x: 0, y: 0, z: 0 }
+            chainCount[a.chain] = 0
+          }
+          chainCM[a.chain].x += a.x; chainCM[a.chain].y += a.y; chainCM[a.chain].z += a.z;
+          chainCount[a.chain]++;
+        }
+
+        if (numAtoms > 0) {
+          globalCM.x /= numAtoms; globalCM.y /= numAtoms; globalCM.z /= numAtoms;
+          
+          for (let chain in chainCM) {
+            chainCM[chain].x /= chainCount[chain];
+            chainCM[chain].y /= chainCount[chain];
+            chainCM[chain].z /= chainCount[chain];
+          }
+
+          const explodeFactor = 30; // 30 Angstroms
+          
+          for (let i = 0; i < atoms.length; i++) {
+            const a = atoms[i]
+            const cm = chainCM[a.chain]
+            
+            let dx = cm.x - globalCM.x;
+            let dy = cm.y - globalCM.y;
+            let dz = cm.z - globalCM.z;
+            
+            let len = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            if (len > 0.0001) {
+              dx /= len; dy /= len; dz /= len;
+              a.x += dx * explodeFactor;
+              a.y += dy * explodeFactor;
+              a.z += dz * explodeFactor;
+            }
+          }
+        }
+      }
+
+      const colorConfig = viewerMode === 'chain' 
+        ? { colorscheme: 'chain' } 
+        : { color: 'spectrum' }
+
+      if (representation === 'surface') {
+        viewer.setStyle({}, { line: { hidden: true } }) // hide default lines
+        viewer.addSurface(window.$3Dmol.SurfaceType.VDW, { ...colorConfig, opacity: 1.0 })
+      } else {
+        viewer.setStyle({}, { cartoon: colorConfig })
+      }
+
       viewer.zoomTo()
       viewer.render()
     }
-  }, [pdbData])
+  }, [pdbData, viewerMode, representation, isExploded])
 
   useEffect(() => {
     if (!viewerRef.current) return;
@@ -79,6 +144,32 @@ function ProteinViewer({ pdbData, loading }) {
           <div className="vc-group">
             <button className="vc-btn vc-icon-btn" onClick={handleReset} title="Reset View">🔄</button>
           </div>
+          <div className="vc-group">
+            <button 
+              className="vc-btn" 
+              onClick={() => setRepresentation('cartoon')}
+              title="Ribbon / Cartoon Mode"
+              style={representation === 'cartoon' ? { background: 'var(--brand-primary)', color: 'white' } : {}}
+            >
+              🎀
+            </button>
+            <button 
+              className="vc-btn" 
+              onClick={() => setRepresentation('surface')}
+              title="Surface Mode (Lego Fit)"
+              style={representation === 'surface' ? { background: 'var(--brand-primary)', color: 'white' } : {}}
+            >
+              🧱
+            </button>
+            <button 
+              className="vc-btn" 
+              onClick={() => setIsExploded(!isExploded)}
+              title="Exploded View (Pull Chains Apart)"
+              style={isExploded ? { background: 'var(--brand-primary)', color: 'white' } : {}}
+            >
+              💥
+            </button>
+          </div>
           <div className="vc-hint">
             <strong>Pro Tip:</strong> Click & Drag to Rotate • Scroll to Zoom • Ctrl+Drag to Pan
           </div>
@@ -87,9 +178,17 @@ function ProteinViewer({ pdbData, loading }) {
       
       {pdbData && !loading && (
         <div className="viewer-legend">
-          <span className="legend-label">N-Terminus</span>
-          <div className="legend-gradient"></div>
-          <span className="legend-label">C-Terminus</span>
+          {viewerMode === 'spectrum' ? (
+            <>
+              <span className="legend-label">N-Terminus</span>
+              <div className="legend-gradient"></div>
+              <span className="legend-label">C-Terminus</span>
+            </>
+          ) : (
+            <div className="legend-chain-mode" style={{ width: '100%', textAlign: 'center', padding: '4px 0' }}>
+              <span className="legend-label">Visualization: Colored by Chain (Complex)</span>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -10,7 +10,14 @@ const POPULAR_PROTEINS = [
   { name: 'Green Fluorescent Protein', accession: 'P42212', gene: 'GFP', organism: 'Aequorea victoria' },
 ]
 
-function SearchPanel({ activeTab, onProteinSelect, onESMFold, loading }) {
+const FAMOUS_COMPLEXES = [
+  { name: 'SARS-CoV-2 Spike & ACE2', pdbId: '6M0J', organism: 'SARS / Human', desc: 'Viral entry mechanism' },
+  { name: 'Actin & Myosin', pdbId: '1YCQ', organism: 'Multiple', desc: 'Muscle motor protein complex' },
+  { name: 'Insulin & Receptor', pdbId: '4ZXB', organism: 'Homo sapiens', desc: 'Metabolic signaling docking' },
+  { name: 'Antibody (IgG)', pdbId: '1IGT', organism: 'Mus musculus', desc: 'Classic immune structure fit' },
+]
+
+function SearchPanel({ activeTab, onProteinSelect, onESMFold, onComplexSelect, loading }) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searching, setSearching] = useState(false)
@@ -67,6 +74,37 @@ function SearchPanel({ activeTab, onProteinSelect, onESMFold, loading }) {
     if (/^[A-Z0-9]{6,10}$/.test(q)) {
       onProteinSelect({ accession: q, name: q, gene: '—', organism: '—' })
     }
+  }
+
+  if (activeTab === 'complexes') {
+    return (
+      <div className="search-panel">
+        <div className="panel-section">
+          <label className="sp-label">Famous Protein Complexes</label>
+          <p className="sp-subtitle" style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: '1.4' }}>
+            Experimental structures from the PDB showing how multiple protein chains naturally fit together into larger machines.
+          </p>
+          <ul className="sp-results">
+            {FAMOUS_COMPLEXES.map((c) => (
+              <li
+                key={c.pdbId}
+                className="sp-result-item"
+                onClick={() => onComplexSelect(c)}
+              >
+                <div className="sp-result-main">
+                  <span className="sp-result-name">{c.name}</span>
+                  <span className="sp-result-acc">{c.pdbId}</span>
+                </div>
+                <div className="sp-result-meta">
+                  <span className="sp-result-gene">{c.desc}</span>
+                  <span className="sp-result-org">{c.organism}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
   }
 
   if (activeTab === 'esmfold') {
