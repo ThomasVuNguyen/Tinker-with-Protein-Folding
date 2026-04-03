@@ -1,0 +1,91 @@
+.protein-info {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.protein-info h3 {
+  margin: 0 0 16px 0;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item .label {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.info-item .value {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.info-item .value.badge {
+  font-family: monospace;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: max-content;
+}
+
+.info-item .value.source-badge {
+  background: rgba(144, 202, 249, 0.1);
+  color: #90CAF9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: max-content;
+}
+
+.plddt {
+  font-weight: 700;
+}
+.plddt.high { color: #81C784; } /* Green */
+.plddt.med { color: #FFB74D; }  /* Orange */
+.plddt.low { color: #E57373; }  /* Red */
+
+.pae-plot {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.pae-plot h4 {
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+}
+
+.pae-plot img {
+  width: 100%;
+  border-radius: 8px;
+  filter: invert(1) hue-rotate(180deg);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
