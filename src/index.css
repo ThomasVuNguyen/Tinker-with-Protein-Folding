@@ -22,6 +22,10 @@
   --border-active: rgba(79, 143, 255, 0.4);
   --shadow-glow: 0 0 40px rgba(79, 143, 255, 0.15);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --bg-card: rgba(14, 21, 40, 0.85);
+  --bg-elevated: rgba(18, 28, 52, 0.95);
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;

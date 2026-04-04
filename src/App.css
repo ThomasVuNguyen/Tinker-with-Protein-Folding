@@ -93,6 +93,13 @@
   animation: fadeInUp 0.3s ease;
 }
 
+/* Full-page layout (Vaccine Lab) */
+.main-full {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
 /* Viewer Area */
 .viewer-area {
   flex: 1;

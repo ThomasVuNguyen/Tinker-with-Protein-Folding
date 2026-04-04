@@ -1,0 +1,552 @@
+/* ============================================
+   Vaccine Lab — Sidebar Controls
+   ============================================ */
+
+.vaccine-lab {
+  padding: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Header ─────────────────────────────────── */
+.vl-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: linear-gradient(135deg, rgba(79, 143, 255, 0.08), rgba(139, 92, 246, 0.06));
+}
+
+.vl-header-icon {
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(79, 143, 255, 0.4));
+}
+
+.vl-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.vl-subtitle {
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ── Steps ──────────────────────────────────── */
+.vl-step {
+  border-bottom: 1px solid var(--border-subtle);
+  opacity: 0.55;
+  transition: opacity var(--transition-smooth);
+}
+
+.vl-step.active,
+.vl-step.completed {
+  opacity: 1;
+}
+
+.vl-step.locked {
+  opacity: 0.35;
+}
+
+.vl-step-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 0;
+}
+
+.vl-step-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vl-step-badge.num {
+  background: rgba(79, 143, 255, 0.15);
+  color: var(--accent-blue);
+  border: 1px solid rgba(79, 143, 255, 0.3);
+}
+
+.vl-step-badge.done {
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  color: white;
+  border: none;
+  font-size: 0.65rem;
+}
+
+.vl-step-badge.locked {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vl-step-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.vl-locked-hint {
+  font-size: 0.75rem;
+}
+
+.vl-step-body {
+  padding: 10px 20px 16px;
+}
+
+/* ── Target Card ────────────────────────────── */
+.vl-target-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.vl-target-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.vl-target-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.vl-tag {
+  font-size: 0.68rem;
+  padding: 3px 8px;
+  border-radius: 100px;
+  background: rgba(79, 143, 255, 0.1);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.vl-sequence-preview {
+  margin-bottom: 10px;
+}
+
+.vl-sequence-preview code {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+  letter-spacing: 0.5px;
+}
+
+/* ── Protein Region Map ─────────────────────── */
+.vl-region-map {
+  position: relative;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.vl-region-bar {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 2px;
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+}
+
+.vl-region-bar:hover {
+  opacity: 1;
+}
+
+.vl-region-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vl-region-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.vl-region-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Form Fields ────────────────────────────── */
+.vl-field {
+  margin-bottom: 12px;
+}
+
+.vl-field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vl-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238892b0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.vl-select:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(79, 143, 255, 0.15);
+}
+
+.vl-field-hint {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.vl-length-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.vl-len-btn {
+  flex: 1;
+  padding: 8px 0;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.vl-len-btn:hover {
+  border-color: rgba(79, 143, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.vl-len-btn.active {
+  background: rgba(79, 143, 255, 0.15);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+/* ── Info Box ───────────────────────────────── */
+.vl-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(79, 143, 255, 0.06);
+  border: 1px solid rgba(79, 143, 255, 0.12);
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.vl-info-box.warn {
+  background: rgba(251, 191, 36, 0.06);
+  border-color: rgba(251, 191, 36, 0.15);
+}
+
+.vl-info-icon {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* ── Run Button ─────────────────────────────── */
+.vl-run-btn {
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.vl-run-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.vl-run-btn:hover::before {
+  opacity: 1;
+}
+
+.vl-run-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(79, 143, 255, 0.35);
+}
+
+.vl-run-btn:active {
+  transform: translateY(0);
+}
+
+.vl-run-btn.secondary {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+}
+
+.vl-run-btn.secondary:hover {
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+}
+
+.vl-run-icon {
+  font-size: 1rem;
+}
+
+/* ── Progress ───────────────────────────────── */
+.vl-progress-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vl-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.vl-progress-pct {
+  font-weight: 700;
+  color: var(--accent-blue);
+  font-variant-numeric: tabular-nums;
+}
+
+.vl-progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vl-progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.vl-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.vl-progress-fill.comparing {
+  background: var(--gradient-warm);
+}
+
+.vl-progress-hint {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* ── Prediction Summary ─────────────────────── */
+.vl-prediction-summary {
+  animation: fadeInUp 0.4s ease;
+}
+
+.vl-stat-row {
+  display: flex;
+  gap: 8px;
+}
+
+.vl-stat {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.vl-stat.highlight {
+  border-color: rgba(79, 143, 255, 0.3);
+  background: rgba(79, 143, 255, 0.06);
+}
+
+.vl-stat.strong {
+  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(52, 211, 153, 0.06);
+}
+
+.vl-stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.vl-stat.highlight .vl-stat-value {
+  color: var(--accent-blue);
+}
+
+.vl-stat.strong .vl-stat-value {
+  color: var(--accent-green);
+}
+
+.vl-stat-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Score Summary ──────────────────────────── */
+.vl-score-summary {
+  animation: fadeInUp 0.4s ease;
+}
+
+.vl-verdict-badge {
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  color: var(--accent-green);
+}
+
+.vl-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.vl-score-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  width: 60px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.vl-score-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.vl-score-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vl-score-bar.recall {
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+}
+
+.vl-score-bar.precision {
+  background: linear-gradient(90deg, var(--accent-purple), #c084fc);
+}
+
+.vl-score-bar.f1 {
+  background: linear-gradient(90deg, var(--accent-green), #6ee7b7);
+}
+
+.vl-score-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  width: 48px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Reset Button ───────────────────────────── */
+.vl-reset-btn {
+  margin: 8px 20px 0;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.vl-reset-btn:hover {
+  border-color: rgba(248, 113, 113, 0.4);
+  color: var(--accent-red);
+  background: rgba(248, 113, 113, 0.05);
+}

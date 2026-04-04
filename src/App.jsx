@@ -3,9 +3,11 @@ import Header from './components/Header'
 import SearchPanel from './components/SearchPanel'
 import ProteinViewer from './components/ProteinViewer'
 import ProteinInfo from './components/ProteinInfo'
+import VaccineLabPage from './components/VaccineLabPage'
 import './App.css'
 
 function App() {
+  const [activePage, setActivePage] = useState('explorer')
   const [activeTab, setActiveTab] = useState('alphafold')
   const [proteinData, setProteinData] = useState(null)
   const [pdbData, setPdbData] = useState(null)
@@ -13,6 +15,7 @@ function App() {
   const [error, setError] = useState(null)
   const [viewerMode, setViewerMode] = useState('spectrum')
 
+  // ─── Existing handlers ─────────────────────────
   const handleComplexSelect = async (complex) => {
     setLoading(true)
     setError(null)
@@ -53,7 +56,6 @@ function App() {
     setViewerMode('spectrum')
 
     try {
-      // Fetch the AlphaFold prediction metadata
       const afRes = await fetch(`https://alphafold.ebi.ac.uk/api/prediction/${protein.accession}`)
       if (!afRes.ok) throw new Error(`No AlphaFold structure found for ${protein.accession}`)
       const afData = await afRes.json()
@@ -78,7 +80,6 @@ function App() {
         source: 'AlphaFold DB',
       })
 
-      // Fetch the actual PDB structure
       const pdbRes = await fetch(entry.pdbUrl)
       if (!pdbRes.ok) throw new Error('Failed to download PDB file')
       const pdb = await pdbRes.text()
@@ -128,46 +129,55 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
-      <main className="main-layout">
-        <aside className="sidebar">
-          <div className="tab-bar">
-            <button
-              className={`tab-btn ${activeTab === 'alphafold' ? 'active' : ''}`}
-              onClick={() => setActiveTab('alphafold')}
-            >
-              <span className="tab-icon">🔬</span>
-              AlphaFold DB
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'esmfold' ? 'active' : ''}`}
-              onClick={() => setActiveTab('esmfold')}
-            >
-              <span className="tab-icon">🧬</span>
-              ESMFold
-            </button>
-            <button
-              className={`tab-btn ${activeTab === 'complexes' ? 'active' : ''}`}
-              onClick={() => setActiveTab('complexes')}
-            >
-              <span className="tab-icon">🧩</span>
-              Complexes
-            </button>
-          </div>
-          <SearchPanel
-            activeTab={activeTab}
-            onProteinSelect={handleProteinSelect}
-            onESMFold={handleESMFold}
-            onComplexSelect={handleComplexSelect}
-            loading={loading}
-          />
-          {error && <div className="error-banner">{error}</div>}
-          {proteinData && <ProteinInfo data={proteinData} />}
-        </aside>
-        <section className="viewer-area">
-          <ProteinViewer pdbData={pdbData} loading={loading} viewerMode={viewerMode} />
-        </section>
-      </main>
+      <Header activePage={activePage} onNavigate={setActivePage} />
+
+      {activePage === 'explorer' && (
+        <main className="main-layout">
+          <aside className="sidebar">
+            <div className="tab-bar">
+              <button
+                className={`tab-btn ${activeTab === 'alphafold' ? 'active' : ''}`}
+                onClick={() => setActiveTab('alphafold')}
+              >
+                <span className="tab-icon">🔬</span>
+                AlphaFold DB
+              </button>
+              <button
+                className={`tab-btn ${activeTab === 'esmfold' ? 'active' : ''}`}
+                onClick={() => setActiveTab('esmfold')}
+              >
+                <span className="tab-icon">🧬</span>
+                ESMFold
+              </button>
+              <button
+                className={`tab-btn ${activeTab === 'complexes' ? 'active' : ''}`}
+                onClick={() => setActiveTab('complexes')}
+              >
+                <span className="tab-icon">🧩</span>
+                Complexes
+              </button>
+            </div>
+            <SearchPanel
+              activeTab={activeTab}
+              onProteinSelect={handleProteinSelect}
+              onESMFold={handleESMFold}
+              onComplexSelect={handleComplexSelect}
+              loading={loading}
+            />
+            {error && <div className="error-banner">{error}</div>}
+            {proteinData && <ProteinInfo data={proteinData} />}
+          </aside>
+          <section className="viewer-area">
+            <ProteinViewer pdbData={pdbData} loading={loading} viewerMode={viewerMode} />
+          </section>
+        </main>
+      )}
+
+      {activePage === 'vaccine' && (
+        <main className="main-full">
+          <VaccineLabPage />
+        </main>
+      )}
     </div>
   )
 }
