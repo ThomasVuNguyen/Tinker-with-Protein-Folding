@@ -81,6 +81,8 @@ function ProteinViewer({ pdbData, loading, viewerMode = 'spectrum' }) {
       if (representation === 'surface') {
         viewer.setStyle({}, { line: { hidden: true } }) // hide default lines
         viewer.addSurface(window.$3Dmol.SurfaceType.VDW, { ...colorConfig, opacity: 1.0 })
+      } else if (representation === 'stick') {
+        viewer.setStyle({}, { stick: { ...colorConfig, radius: 0.15 } })
       } else {
         viewer.setStyle({}, { cartoon: colorConfig })
       }
@@ -152,6 +154,14 @@ function ProteinViewer({ pdbData, loading, viewerMode = 'spectrum' }) {
               style={representation === 'cartoon' ? { background: 'var(--brand-primary)', color: 'white' } : {}}
             >
               🎀
+            </button>
+            <button 
+              className="vc-btn" 
+              onClick={() => setRepresentation('stick')}
+              title="Stick Mode (Atomic Bonds)"
+              style={representation === 'stick' ? { background: 'var(--brand-primary)', color: 'white' } : {}}
+            >
+              🪢
             </button>
             <button 
               className="vc-btn" 
